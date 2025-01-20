@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, CallbackContext
 
 TELEGRAM_BOT_TOKEN = '7594521276:AAEyNanseIFUpZZvjl3qttq9JPJmMeaieR4'
-ADMIN_USER_IDS = [ 1662672529, 5712572640, 1549748318 ]
+ADMIN_USER_IDS = [1662672529, 5712572640, 1549748318]
 APPROVED_IDS_FILE = 'approved_ids.txt'
 attack_in_progress = False
 
@@ -34,14 +34,16 @@ async def start(update: Update, context: CallbackContext):
 # Approve command to approve users and group chat IDs
 async def approve(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
     args = context.args
 
-    if chat_id != ADMIN_USER_ID:
+    # Check if the user is an admin
+    if user_id not in ADMIN_USER_IDS:
         await context.bot.send_message(chat_id=chat_id, text="*⚠️ You need admin permission to use this command.*", parse_mode='Markdown')
         return
 
     if len(args) != 1:
-        await context.bot.send_message(chat_id=chat_id, text="* Usage » /approve id (user or group chat ID)*", parse_mode='Markdown')
+        await context.bot.send_message(chat_id=chat_id, text="*Usage » /approve id (user or group chat ID)*", parse_mode='Markdown')
         return
 
     target_id = args[0].strip()
@@ -52,14 +54,16 @@ async def approve(update: Update, context: CallbackContext):
 # Remove command to remove approved users and group chat IDs
 async def remove(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
     args = context.args
 
-    if chat_id != ADMIN_USER_ID:
+    # Check if the user is an admin
+    if user_id not in ADMIN_USER_IDS:
         await context.bot.send_message(chat_id=chat_id, text="*⚠️ You need admin permission to use this command.*", parse_mode='Markdown')
         return
 
     if len(args) != 1:
-        await context.bot.send_message(chat_id=chat_id, text="* Usage » /remove id (user or group chat ID)*", parse_mode='Markdown')
+        await context.bot.send_message(chat_id=chat_id, text="*Usage » /remove id (user or group chat ID)*", parse_mode='Markdown')
         return
 
     target_id = args[0].strip()
@@ -87,7 +91,7 @@ async def attack(update: Update, context: CallbackContext):
         return
 
     if len(args) != 3:
-        await context.bot.send_message(chat_id=chat_id, text="*  example » /attack ip port time*", parse_mode='Markdown')
+        await context.bot.send_message(chat_id=chat_id, text="* Example » /attack ip port time*", parse_mode='Markdown')
         return
 
     ip, port, time = args
@@ -137,4 +141,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
